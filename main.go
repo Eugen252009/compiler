@@ -16,5 +16,13 @@ func main() {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	lexer.Lexer(content)
+	tokens := lexer.Lexer(content)
+	parsed := Parse(&tokens)
+	fmt.Println(parsed)
+}
+func Parse(token *[]lexer.Token) bool {
+	for _, val := range *token {
+		fmt.Printf("Type: %s, Value: %s\n", val.Type, val.Value)
+	}
+	return true
 }
