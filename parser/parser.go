@@ -1,9 +1,9 @@
 package parser
 
 import (
-	"compiler/ast"
-	"compiler/lexer"
 	"fmt"
+	"github.com/eugen252009/compiler/ast"
+	"github.com/eugen252009/compiler/lexer"
 )
 
 func Parse(tokens lexer.Tokenized) (asttree ast.AST) {

@@ -1,10 +1,12 @@
 package main
 
 import (
-	"compiler/lexer"
-	"compiler/parser"
 	"fmt"
 	"os"
+
+	"github.com/eugen252009/compiler/ast"
+	"github.com/eugen252009/compiler/lexer"
+	"github.com/eugen252009/compiler/parser"
 )
 
 func main() {
@@ -19,5 +21,7 @@ func main() {
 	}
 	lex := lexer.New(string(content))
 	parse := parser.Parse(lex)
-	fmt.Println("Parsed ", parse)
+	ast.ToJavaScript(parse)
+
+	// fmt.Println("Parsed ", parse)
 }
