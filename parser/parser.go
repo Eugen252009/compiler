@@ -109,10 +109,9 @@ func parseFunctionCalls(token lexer.Tokenized) ([]ast.FUNCTIONCALL, int) {
 	tiktok := make([]ast.FUNCTIONCALL, 0)
 	tok := token.NextToken()
 	id, funccall := parseFuncCall(tok.Value, token)
-	token.Index = id + 1
+	token.Index = id
 	tiktok = append(tiktok, funccall)
 	for token.NextToken().Type != lexer.TOKEN_CCURLY {
-		// fmt.Println(token.LastToken)
 		id, funccall := parseFuncCall(token.LastToken.Value, token)
 		token.Index = id
 		tiktok = append(tiktok, funccall)
@@ -132,10 +131,10 @@ func parseFuncCall(name string, token lexer.Tokenized) (int, ast.FUNCTIONCALL) {
 }
 func Printf(token lexer.Tokenized) (int, ast.FUNCTIONCALL) {
 	params := []string{}
-	for tok := token.NextToken(); tok.Type != lexer.TOKEN_SEMICOL; tok = token.NextToken() {
+	for tok := token.LastToken; tok.Type != lexer.TOKEN_SEMICOL; tok = token.NextToken() {
 		if token.LastToken.Type == lexer.TOKEN_OPAREN {
 			params, id := parseParam(token)
-			token.Index = id
+			token.Index = id + 1
 			return token.Index, ast.FUNCTIONCALL{Name: "printf", Args: params}
 		}
 		if token.LastToken.Type == lexer.TOKEN_STRING_LITERAL {
@@ -158,6 +157,7 @@ func parseParam(token lexer.Tokenized) (args []string, id int) {
 			args = append(args, tok.Value)
 		}
 		id = token.Index
+		return
 	} else {
 		fmt.Println("-----------------------------")
 		fmt.Println("Error parsing args")
