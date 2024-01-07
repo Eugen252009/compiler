@@ -1,7 +1,7 @@
 package ast
 
 type AST struct {
-	Function FUNCTION
+	Function []FUNCTION
 }
 
 type FUNCTIONCALL struct {

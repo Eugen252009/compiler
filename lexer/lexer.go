@@ -22,6 +22,7 @@ func (lexer *Lexer_Type) NextChar() rune {
 }
 func New(input string) Tokenized {
 	lex := Lexer_Type{Input: input, Index: -1, Bol: 1}
+	// lex.Printline()
 	return Tokenize(lex)
 }
 
@@ -131,6 +132,34 @@ func Tokenize(rawstring Lexer_Type) (tokens Tokenized) {
 					})
 			}
 		}
+		if unicode.IsDigit(char) {
+			for unicode.IsDigit(char) {
+				// fmt.Println("letter", string(char))
+				word = append(word, string(char))
+				char = rawstring.NextChar()
+			}
+			rawstring.Index--
+			token := strings.TrimSpace(strings.Join(word, ""))
+			// fmt.Println("token", string(token))
+			if GetToken(token) == TOKEN_ILLEGAL {
+				panic(
+					fmt.Sprintf(
+						"ILLEGAL Token on line [%d:%d]:%s\n",
+						rawstring.Line,
+						id-rawstring.Bol,
+						token,
+					))
+			} else {
+				tokens.Token = append(
+					tokens.Token,
+					Token{
+						Type:     GetToken(token),
+						Value:    token,
+						Location: getLocation(rawstring, 0),
+					})
+			}
+		}
+
 	}
 	return
 }

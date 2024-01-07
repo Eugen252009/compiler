@@ -18,11 +18,6 @@ func main() {
 		fmt.Println(err.Error())
 	}
 	lex := lexer.New(string(content))
-	parser.Parse(lex)
-	// for _, v := range lex {
-	// 	fmt.Println(string(v.Value))
-	// }
-	// tokens := lexer.Lexer([]rune(string(content)))
-	// fmt.Println(tokens)
-	// fmt.Println(lexer.ParseFunction(tokens))
+	parse := parser.Parse(lex)
+	fmt.Println("Parsed ", parse)
 }

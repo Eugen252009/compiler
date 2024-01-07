@@ -18,7 +18,7 @@ type TextLocation struct {
 
 func (t *Tokenized) NextToken() Token {
 	t.Index++
-	if t.Index > len(t.Token) {
+	if t.Index+1 > len(t.Token) {
 		t.LastToken = Token{Type: TOKEN_END}
 		return t.LastToken
 	}
