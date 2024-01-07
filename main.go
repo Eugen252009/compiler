@@ -2,13 +2,14 @@ package main
 
 import (
 	"compiler/lexer"
+	"compiler/parser"
 	"fmt"
 	"os"
 )
 
 func main() {
-	if len(os.Args) == 1 {
-		fmt.Println("No File specified")
+	if len(os.Args) < 2 || len(os.Args) > 2 {
+		fmt.Println("No File specified or too Many files specified")
 		return
 	}
 	var file = os.Args[1]
@@ -16,13 +17,12 @@ func main() {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	tokens := lexer.Lexer(content)
-	parsed := Parse(&tokens)
-	fmt.Println(parsed)
-}
-func Parse(token *[]lexer.Token) bool {
-	for _, val := range *token {
-		fmt.Printf("Type: %s, Value: %s\n", val.Type, val.Value)
-	}
-	return true
+	lex := lexer.New(string(content))
+	parser.Parse(lex)
+	// for _, v := range lex {
+	// 	fmt.Println(string(v.Value))
+	// }
+	// tokens := lexer.Lexer([]rune(string(content)))
+	// fmt.Println(tokens)
+	// fmt.Println(lexer.ParseFunction(tokens))
 }

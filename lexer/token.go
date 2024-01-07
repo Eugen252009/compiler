@@ -1,63 +1,92 @@
 package lexer
 
-const (
-	TOKEN_FUNCTION TokenType = "main"
-	TOKEN_RETURN   TokenType = "return"
-	TOKEN_SEMICOL  TokenType = ";"
-	TOKEN_OPAREN   TokenType = "("
-	TOKEN_CPAREN   TokenType = ")"
-	TOKEN_OCURLY   TokenType = "{"
-	TOKEN_CCURLY   TokenType = "}"
-	TOKEN_EMPTY    TokenType = "NONE"
-	TOKEN_INT      TokenType = "int"
-	TOKEN_Char     TokenType = "char"
-)
-
-const (
-	Literal_Int   LiteralType = "_int"
-	Literal_EMPTY TokenType   = "NONE"
-)
-
 type TokenType string
 type Token struct {
-	Type  TokenType
-	Value string
+	Type     TokenType
+	Value    string
+	Location TextLocation
+}
+type Tokenized struct {
+	LastToken Token
+	Token     []Token
+	Index     int
+}
+type TextLocation struct {
+	Line   int
+	Column int
 }
 
-type LiteralType string
-type Literal struct {
-	Literal LiteralType
-	Value   string
-}
-
-func IsToken(name string, val string) Token {
-	switch name {
-	case string(TOKEN_FUNCTION):
-		return Token{TOKEN_FUNCTION, val}
-	case string(TOKEN_RETURN):
-		return Token{TOKEN_RETURN, ""}
-	case string(TOKEN_SEMICOL):
-		return Token{TOKEN_SEMICOL, ""}
-	case string(TOKEN_OPAREN):
-		return Token{TOKEN_OPAREN, ""}
-	case string(TOKEN_CPAREN):
-		return Token{TOKEN_CPAREN, ""}
-	case string(TOKEN_OCURLY):
-		return Token{TOKEN_OCURLY, ""}
-	case string(TOKEN_CCURLY):
-		return Token{TOKEN_CCURLY, ""}
-	case string(TOKEN_INT):
-		return Token{TOKEN_INT, ""}
-	default:
-		return Token{TOKEN_EMPTY, string(Literal_EMPTY)}
+func (t *Tokenized) NextToken() Token {
+	t.Index++
+	if t.Index > len(t.Token) {
+		t.LastToken = Token{Type: TOKEN_END}
+		return t.LastToken
 	}
+	t.LastToken = t.Token[t.Index]
+	return t.Token[t.Index]
 }
-func IsLiteral(name string, val string) Literal {
-	switch name {
-	case string(Literal_Int):
-		return Literal{LiteralType(Literal_Int), val}
-	default:
-		return Literal{LiteralType(Literal_EMPTY), string(Literal_Int)}
 
+var TokenTypes = make([]TokenType, 0)
+
+const (
+	TOKEN_INT            TokenType = "TOKEN_INT"
+	TOKEN_SEMICOL        TokenType = "TOKEN_SEMICOL"
+	TOKEN_OPAREN         TokenType = "TOKEN_OPAREN"
+	TOKEN_CPAREN         TokenType = "TOKEN_CPAREN"
+	TOKEN_OCURLY         TokenType = "TOKEN_OCURLY"
+	TOKEN_CCURLY         TokenType = "TOKEN_CCURLY"
+	TOKEN_RETURN         TokenType = "TOKEN_RETURN"
+	TOKEN_ILLEGAL        TokenType = "TOKEN_ILLEGAL"
+	TOKEN_FUNCTIONCALL   TokenType = "TOKEN_FUNCTIONCALL"
+	TOKEN_STRING_LITERAL TokenType = "TOKEN_STRING_LITERAL"
+	TOKEN_END            TokenType = "TOKEN_END"
+)
+
+func GetToken(tokenstr string) (validtoken TokenType) {
+	switch tokenstr {
+	case "printf":
+		return TOKEN_FUNCTIONCALL
+	case "return":
+		return TOKEN_RETURN
+	case "int":
+		return TOKEN_INT
+	default:
+		return TOKEN_STRING_LITERAL
 	}
+
 }
+func getLocation(lex Lexer_Type, offset int) TextLocation {
+	return TextLocation{Line: lex.Line, Column: lex.Index - lex.Bol - offset}
+}
+
+// const (
+//
+//	TYPE_INT  string = "INT"
+//	TYPE_Void string = "void"
+//
+// )
+//
+// type STMT_KIND string
+//
+// const (
+//
+//	STMT_FUNCALL STMT_KIND = "STMT_FUNCALL"
+//	STMT_RETURN  STMT_KIND = "STMT_RETURN"
+//
+// )
+
+//
+// type FUNC struct {
+// 	NAME string
+// 	Body string
+// }
+// type RetStmt struct {
+// 	Expr string
+// }
+// type Funccall struct {
+// 	Name string
+// 	args string
+// }
+// type STMT struct {
+// 	Kind STMT_KIND
+// }
